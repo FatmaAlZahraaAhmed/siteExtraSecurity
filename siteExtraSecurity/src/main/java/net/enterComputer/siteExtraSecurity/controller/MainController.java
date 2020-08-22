@@ -1,10 +1,7 @@
 package net.enterComputer.siteExtraSecurity.controller;
 
 import net.enterComputer.siteExtraSecurity.model.*;
-import net.enterComputer.siteExtraSecurity.service.AccountServiceImpl;
-import net.enterComputer.siteExtraSecurity.service.ContactUsServiceImpl;
-import net.enterComputer.siteExtraSecurity.service.SendEmailServiceImpl;
-import net.enterComputer.siteExtraSecurity.service.ToDoService;
+import net.enterComputer.siteExtraSecurity.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 
 @Controller
 public class MainController {
@@ -25,6 +21,8 @@ public class MainController {
     private ToDoService toDoService;
     @Autowired
     private AccountServiceImpl accountService;
+    @Autowired
+    private SwotServiceImpl swotService;
 
     //accept new income
     @GetMapping(path = {"/", "/index.html"})
@@ -56,6 +54,23 @@ public class MainController {
     public String viewSwot(Model model) {
         model.addAttribute("SWOT", new SWOT());
         return "swot";
+    }
+
+    @PostMapping("/swot")
+    public String submitSwot(@ModelAttribute("SWOT") SWOT swot) {
+        swotService.saveSWOT(swot);
+        swotService.sendSwotMail(swot);
+        return "save-swot";
+    }
+
+    @GetMapping("/Marketing.html")
+    public String getMarketing() {
+        return "Marketing";
+    }
+
+    @GetMapping("/Web-MobileApp.html")
+    public String getWebAndMob() {
+        return "Web-MobileApp";
     }
 
     @PostMapping("/contactForm")
